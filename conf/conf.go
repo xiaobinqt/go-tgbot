@@ -6,6 +6,8 @@ import (
 	embed2 "go-tgbot/comm/embed"
 	"gopkg.in/yaml.v3"
 	"io"
+	"io/fs"
+	"os"
 )
 
 // 说明：mapstructure 是viper的tag
@@ -40,12 +42,17 @@ type Keys struct {
 	RemindMsg   string `json:"remind_msg" yaml:"remind_msg" mapstructure:"remind_msg"`
 }
 
-func ReadConfig() (c *AllConfig, err error) {
+func ReadConfig(path ...string) (c *AllConfig, err error) {
 	var (
 		yamlFile = make([]byte, 0)
+		f        fs.File
 	)
 
-	f, err := embed2.GetWebFileSystem().Open("prod.yaml")
+	if len(path) > 0 {
+		f, err = os.Open(path[0])
+	} else {
+		f, err = embed2.GetWebFileSystem().Open("prod.yaml")
+	}
 	if err != nil {
 		err = errors.Wrapf(err, "embed open config.yaml err")
 		return nil, err

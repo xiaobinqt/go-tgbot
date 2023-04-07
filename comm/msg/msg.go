@@ -2,6 +2,7 @@ package msg
 
 import (
 	"fmt"
+	"go-tgbot/ticker"
 	"os"
 	"strings"
 
@@ -19,7 +20,7 @@ func HandleMsg(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 		return
 	}
 
-	msg := contextTextBypass(update.Message.Text, "")
+	msg := contextTextBypass(update.Message.Text, update.Message.Chat.ID)
 	if msg == "" {
 		return
 	}
@@ -58,7 +59,7 @@ func trimMsgContent(content string) string {
 	return content
 }
 
-func contextTextBypass(txt, userID string) (retMsg string) {
+func contextTextBypass(txt string, chatID int64) (retMsg string) {
 	var (
 		err error
 	)
@@ -128,10 +129,11 @@ func contextTextBypass(txt, userID string) (retMsg string) {
 `
 	}
 
+	if ticker.IsScheduleNotice(txt) {
+		return ticker.AddScheduleNotice(txt, chatID)
+	}
+
 	// todo 其他的一些
-	//if ticker.IsScheduleNotice(txt) {
-	//	return ticker.AddScheduleNotice(txt, userID)
-	//}
 
 	return ""
 }

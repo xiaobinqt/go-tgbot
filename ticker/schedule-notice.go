@@ -30,7 +30,7 @@ var (
 const (
 	messageType1 = "+s"
 	messageType2 = "+st"
-	memberKey    = "weixin:schedule.notice"
+	memberKey    = "tgbot:schedule.notice"
 )
 
 func IsScheduleNotice(message string) bool {
@@ -115,7 +115,7 @@ func parseNoticeMessage(tf string) (count, interval int, startTimestamp int64, m
 	return count, interval, startTimestamp, message, nil
 }
 
-func formatMember(count, interval int, startTimestamp int64, message, userID string) []*redis2.Z {
+func formatMember(count, interval int, startTimestamp int64, message string, chatID int64) []*redis2.Z {
 	var (
 		members = make([]*redis2.Z, 0)
 	)
@@ -124,14 +124,14 @@ func formatMember(count, interval int, startTimestamp int64, message, userID str
 		tmp := startTimestamp + int64(i*interval)
 		members = append(members, &redis2.Z{
 			Score:  float64(tmp),
-			Member: fmt.Sprintf("%s.placeholder.%s.placeholder.%s", message, userID, uuid.NewV4().String()),
+			Member: fmt.Sprintf("%s.placeholder.%d.placeholder.%s", message, chatID, uuid.NewV4().String()),
 		})
 	}
 
 	return members
 }
 
-func set(tf, userID string) (replyMsg string) {
+func set(tf string, chatID int64) (replyMsg string) {
 	var (
 		count, interval int
 		startTimestamp  int64
@@ -145,7 +145,7 @@ func set(tf, userID string) (replyMsg string) {
 		return err.Error()
 	}
 
-	members = formatMember(count, interval, startTimestamp, message, userID)
+	members = formatMember(count, interval, startTimestamp, message, chatID)
 
 	redisClient := redis.GetRedis()
 	if redisClient == nil {
@@ -212,8 +212,8 @@ func del() {
 	return
 }
 
-func AddScheduleNotice(msg, userID string) (replyMsg string) {
-	return set(msg, userID)
+func AddScheduleNotice(msg string, chatID int64) (replyMsg string) {
+	return set(msg, chatID)
 }
 
 type Msg struct {
@@ -263,62 +263,31 @@ func ScheduleNoticeTicker(bot *tgbotapi.BotAPI) {
 
 			// 先删除再发消息，发送时有网络请求会慢
 			del()
-			go sendNotice(msgf)
+			go sendNotice(msgf, bot)
 
 			doing = false
 		}
 	}
 }
 
-func sendNotice(msgf []Msg) {
-	// todo
-	//var (
-	//	err     error
-	//	idMap   = make(map[int64]string, 0)
-	//	gMsgMap = make(map[int64]*openwechat.Group) // TODO 暂时不考虑同一个群消息重复问题
-	//	fMsgMap = make(map[int64]*openwechat.Friend)
-	//)
-	//
-	//for _, each := range msgf {
-	//	idMap[each.ChatID] = each.Message
-	//}
-	//
-	//g, err := global.WxSelf.Groups(true)
-	//if err == nil {
-	//	for _, each := range g {
-	//		if message, ok := idMap[each.ID()]; ok {
-	//			gMsgMap[message] = each
-	//		}
-	//	}
-	//}
-	//
-	//f, err := global.WxSelf.Friends(true)
-	//if err == nil {
-	//	for _, each := range f {
-	//		if message, ok := idMap[each.ID()]; ok {
-	//			fMsgMap[message] = each
-	//		}
-	//	}
-	//}
-	//
-	//if len(fMsgMap) > 0 {
-	//	for message, each := range fMsgMap {
-	//		_, err = global.WxSelf.SendTextToFriend(each, message)
-	//		if err != nil {
-	//			err = errors.Wrapf(err, "sendNotice SendTextToFriend err")
-	//			logrus.Error(err.Error())
-	//		}
-	//	}
-	//}
-	//
-	//if len(gMsgMap) > 0 {
-	//	for message, each := range gMsgMap {
-	//		_, err = global.WxSelf.SendTextToGroup(each, message)
-	//		if err != nil {
-	//			err = errors.Wrapf(err, "sendNotice SendTextToGroup err")
-	//			logrus.Error(err.Error())
-	//		}
-	//	}
-	//}
+func sendNotice(msgf []Msg, bot *tgbotapi.BotAPI) {
+	var (
+		err   error
+		idMap = make(map[int64]string, 0) // chatID -> message
+	)
+
+	for _, each := range msgf {
+		idMap[each.ChatID] = each.Message
+	}
+
+	if len(idMap) > 0 {
+		for chatID, message := range idMap {
+			_, err = bot.Send(tgbotapi.NewMessage(chatID, message))
+			if err != nil {
+				err = errors.Wrapf(err, "sendNotice err")
+				logrus.Error(err.Error())
+			}
+		}
+	}
 
 }

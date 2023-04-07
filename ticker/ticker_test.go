@@ -2,12 +2,13 @@ package ticker
 
 import (
 	"fmt"
+	"github.com/go-redis/redis/v8"
+	conf2 "go-tgbot/conf"
 	"testing"
 	"time"
 
 	"github.com/json-iterator/go/extra"
 	"github.com/sirupsen/logrus"
-	conf2 "go-tgbot/comm/conf"
 	"go-tgbot/comm/global"
 )
 
@@ -17,7 +18,8 @@ func initAction(t *testing.T) {
 	var (
 		err error
 	)
-	conf, err := conf2.GetConf("../../config/prod.yaml")
+
+	conf, err := conf2.ReadConfig("../config/prod.yaml")
 	if err != nil {
 		t.Logf("get conf err:%s ", err.Error())
 		return
@@ -27,11 +29,11 @@ func initAction(t *testing.T) {
 }
 
 func TestSendLoveMessage(t *testing.T) {
-	var done = make(chan struct{})
-	go LoveTicker()
-
-	fmt.Println("done...")
-	<-done
+	//var done = make(chan struct{})
+	//go LoveTicker()
+	//
+	//fmt.Println("done...")
+	//<-done
 }
 
 func TestNoticeMessage(t *testing.T) {
@@ -62,7 +64,7 @@ func TestParseTime(t *testing.T) {
 		fmt.Println("失败11111", err.Error())
 		return
 	}
-	printMember(formatMember(count, interval, startTimestamp, message, "1111"))
+	printMember(formatMember(count, interval, startTimestamp, message, 1111))
 
 	fmt.Println("---------------------------------------------------------------------")
 	count, interval, startTimestamp, message, err = parseNoticeMessage("+s15:32,消息内容2222,3,15")
@@ -71,7 +73,7 @@ func TestParseTime(t *testing.T) {
 		fmt.Println("失败222222", err.Error())
 		return
 	}
-	printMember(formatMember(count, interval, startTimestamp, message, "1111"))
+	printMember(formatMember(count, interval, startTimestamp, message, 1111))
 
 	fmt.Println("---------------------------------------------------------------------")
 	count, interval, startTimestamp, message, err = parseNoticeMessage("+s15:32,消息内容3333333,1,45")
@@ -80,7 +82,7 @@ func TestParseTime(t *testing.T) {
 		fmt.Println("失败33333", err.Error())
 		return
 	}
-	printMember(formatMember(count, interval, startTimestamp, message, "1111"))
+	printMember(formatMember(count, interval, startTimestamp, message, 1111))
 }
 
 func printMember(members []*redis.Z) {
@@ -91,7 +93,7 @@ func printMember(members []*redis.Z) {
 
 func TestZSetRedis(t *testing.T) {
 	initAction(t)
-	err := set("+s19:32,记得买辣椒,2,60", "697611681")
+	err := set("+s19:32,记得买辣椒,2,60", 697611681)
 	fmt.Println(err)
 }
 

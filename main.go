@@ -8,9 +8,9 @@ import (
 	"github.com/sirupsen/logrus"
 	embed2 "go-tgbot/comm/embed"
 	"go-tgbot/comm/global"
-	"go-tgbot/comm/ticker"
 	"go-tgbot/conf"
 	"go-tgbot/handle"
+	"go-tgbot/ticker"
 	"log"
 	"time"
 )
