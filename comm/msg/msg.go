@@ -2,6 +2,7 @@ package msg
 
 import (
 	"fmt"
+	"go-tgbot/ecode"
 	"go-tgbot/ticker"
 	"os"
 	"strings"
@@ -64,14 +65,7 @@ func contextTextBypass(txt string, chatID int64) (retMsg string) {
 		err error
 	)
 	if txt == "菜单" {
-		return `
-天气查询，如：泾县天气。
-菜谱查询，如: 红烧肉菜谱，红烧肉做法。
-输入【程序员鼓励师】收到程序员鼓励师的回复。
-输入【事件提醒】获取设置事件提醒的格式。
-输入【毒鸡汤】关键字回复毒鸡汤。
-输入【英语一句话】关键字回复一句学习英语。
-`
+		return ecode.HelpMessage
 	}
 
 	if txt == "天气" {
