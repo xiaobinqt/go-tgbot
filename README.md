@@ -50,7 +50,7 @@ nohup ./wxbot > core.log & # 后台运行
 
 如果是国内的服务器，比如阿里云的，可以使用 clash，具体可以参考 [使用 Clash 为 Linux 提供网络代理服务](https://www.ahdark.blog/som/1643.shtml)，我之前用的就是这个，但是感觉不太稳定，进程明明还在但是 bot 已经不收发消息了，其他人也有遇到同样的问题。
 
-<div align="center"><img src="https://cdn.xiaobinqt.cn/xiaobinqt.io/20230410/3d5f57e8d752424a82bd4d89ff314982.png?imageView2/0/q/75|watermark/2/text/eGlhb2JpbnF0/font/dmlqYXlh/fontsize/1000/fill/IzVDNUI1Qg==/dissolve/52/gravity/SouthEast/dx/15/dy/15" width=  /></div>
+<div align="center"><img src="https://cdn.xiaobinqt.cn/xiaobinqt.io/20230410/3d5f57e8d752424a82bd4d89ff314982.png" width=  /></div>
 
 后来我买了一个便宜的 vps，参考 [cheap-vps](https://renzhn.github.io/posts/cheap-vps/)，一年 10.78 刀，[840 MB KVM VPS (Easter 2023)](https://my.racknerd.com/cart.php?a=confproduct&i=0)
 
