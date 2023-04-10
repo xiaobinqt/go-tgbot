@@ -21,9 +21,10 @@ type AllConfig struct {
 
 // App .
 type App struct {
-	Debug  bool   `json:"debug" yaml:"debug" mapstructure:"debug"`
-	ChatID int64  `json:"chat_id" yaml:"chat_id" mapstructure:"chat_id"`
-	Token  string `json:"token" yaml:"token" mapstructure:"token"`
+	Debug           bool   `json:"debug" yaml:"debug" mapstructure:"debug"`
+	ChatID          int64  `json:"chat_id" yaml:"chat_id" mapstructure:"chat_id"`
+	KeepAliveChatID int64  `json:"keep_alive_chat_id" yaml:"keep_alive_chat_id" mapstructure:"keep_alive_chat_id"`
+	Token           string `json:"token" yaml:"token" mapstructure:"token"`
 }
 
 type RedisConf struct {

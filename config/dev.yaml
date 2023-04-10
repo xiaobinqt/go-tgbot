@@ -1,7 +1,8 @@
 app:
   debug: true
-  chat_id: xxxxx
-  token: xxxxxx
+  chat_id: xxxx
+  keep_alive_chat_id: xxxx
+  token: xx
 
 keys:
   bot_name: 卫小兵
@@ -9,10 +10,10 @@ keys:
   tianapi_key: xxxxxxxxxxxx # 天行 api key
   tianapi_key1: xxxxxxxxxxxxxx # 天行 api key
   qweather_key: xxxxxxxxxxxxxxxx # 和风天气 api key
-  lover_ch_name: xxxxx
-  remind_msg: xxxxxxx
+  lover_ch_name: xxxxxx
+  remind_msg: xxxx
 
 redis:
-  ip: 39.xxxx
+  ip: 39.xxxxx
   port: 6379
   passwd: xxxxxx
