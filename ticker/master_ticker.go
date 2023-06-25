@@ -41,6 +41,11 @@ func MasterTicker(bot *tgbotapi.BotAPI) {
 					fmt.Sprintf(`离雅思过期时间还有 %d 天，兄弟，留给你的时间不多了！`, yasiRemaindays)))
 			}
 
+			if t.Weekday() != 0 && t.Weekday() != 6 &&
+				(nowTime == "10:51" || nowTime == "10:52" || nowTime == "10:53") {
+				_, _ = bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, "点外卖"))
+			}
+
 			if nowTime == "22:00" {
 				message := "记得背单词兄弟，别一天天的想偷懒！"
 				_, err := bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, message))
