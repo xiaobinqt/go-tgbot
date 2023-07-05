@@ -17,6 +17,8 @@ FROM debian:buster-slim
 RUN apt update && \
     apt install -y ca-certificates
 
+ENV TZ=Asia/Shanghai
+
 COPY --from=build /go/src/tgbot/tgbot /usr/bin/
 
 CMD ["/usr/bin/tgbot"]
