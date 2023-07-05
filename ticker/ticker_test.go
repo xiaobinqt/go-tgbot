@@ -3,7 +3,11 @@ package ticker
 import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/pkg/errors"
+	"go-tgbot/comm/embed"
 	conf2 "go-tgbot/conf"
+	"log"
 	"testing"
 	"time"
 
@@ -106,4 +110,22 @@ func TestZGetRedis(t *testing.T) {
 func TestZDelRedis(t *testing.T) {
 	initAction(t)
 	del()
+}
+
+func Test_ELM(t *testing.T) {
+	initAction(t)
+
+	bot, err := tgbotapi.NewBotAPI(global.Conf.App.Token)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	f, err := embed.GetStaticFileSystem().Open("elm.png")
+	if err != nil {
+		err = errors.Wrapf(err, "GetStaticFileSystem open elm.png")
+		logrus.Error(err.Error())
+	} else {
+		reader := tgbotapi.FileReader{Name: "elm.png", Reader: f}
+		_, _ = bot.Send(tgbotapi.NewPhoto(global.Conf.App.ChatID, reader))
+	}
 }

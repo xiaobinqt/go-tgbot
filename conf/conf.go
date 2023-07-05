@@ -52,7 +52,7 @@ func ReadConfig(path ...string) (c *AllConfig, err error) {
 	if len(path) > 0 {
 		f, err = os.Open(path[0])
 	} else {
-		f, err = embed2.GetWebFileSystem().Open("prod.yaml")
+		f, err = embed2.GetConfigFileSystem().Open("prod.yaml")
 	}
 	if err != nil {
 		err = errors.Wrapf(err, "embed open config.yaml err")

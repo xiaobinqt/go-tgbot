@@ -5,17 +5,17 @@ import (
 	"io/fs"
 )
 
-var webFs embed.FS
+var configFs embed.FS
 
-func SetWebFs(fs embed.FS) {
-	webFs = fs
+func SetConfigFs(fs embed.FS) {
+	configFs = fs
 }
 
 func GetWebFs() embed.FS {
-	return webFs
+	return configFs
 }
 
-func GetWebFileSystem(p ...string) fs.FS {
+func GetConfigFileSystem(p ...string) fs.FS {
 	path := "config"
 	if len(p) != 0 && p[0] != "" {
 		path = p[0]

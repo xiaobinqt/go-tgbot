@@ -18,8 +18,11 @@ import (
 	"time"
 )
 
-//go:embed config/prod.yaml
-var embedWebFiles embed.FS
+//go:embed config
+var embedConfigFiles embed.FS
+
+//go:embed static
+var embedStaticsFiles embed.FS
 
 var (
 	gitCommit string
@@ -46,7 +49,8 @@ func main() {
 		err error
 	)
 
-	embed2.SetWebFs(embedWebFiles)
+	embed2.SetConfigFs(embedConfigFiles)
+	embed2.SetStaticFsFs(embedStaticsFiles)
 
 	// 加载配置文件
 	c, err = conf.ReadConfig()

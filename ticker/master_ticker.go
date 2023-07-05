@@ -2,6 +2,7 @@ package ticker
 
 import (
 	"fmt"
+	"go-tgbot/comm/embed"
 	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -41,9 +42,27 @@ func MasterTicker(bot *tgbotapi.BotAPI) {
 					fmt.Sprintf(`离雅思过期时间还有 %d 天，兄弟，留给你的时间不多了！`, yasiRemaindays)))
 			}
 
-			if t.Weekday() != 0 && t.Weekday() != 6 &&
-				(nowTime == "10:51" || nowTime == "10:52" || nowTime == "10:53") {
-				_, _ = bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, "点外卖"))
+			if t.Weekday() != 0 && t.Weekday() != 6 {
+				if nowTime == "10:51" {
+					_, _ = bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, "点外卖"))
+
+					f, err := embed.GetStaticFileSystem().Open("elm.png")
+					if err != nil {
+						err = errors.Wrapf(err, "GetStaticFileSystem open elm.png")
+						logrus.Error(err.Error())
+					} else {
+						reader := tgbotapi.FileReader{Name: "elm.png", Reader: f}
+						_, _ = bot.Send(tgbotapi.NewPhoto(global.Conf.App.ChatID, reader))
+					}
+				}
+
+				if nowTime == "10:52" || nowTime == "10:53" {
+					_, _ = bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, "点外卖"))
+				}
+
+				if nowTime == "11:05" {
+					_, _ = bot.Send(tgbotapi.NewMessage(global.Conf.App.ChatID, "点外卖。已经点了请忽略此消息。"))
+				}
 			}
 
 			if nowTime == "22:00" {
