@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"flag"
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/json-iterator/go/extra"
 	"github.com/sirupsen/logrus"
@@ -12,15 +13,32 @@ import (
 	"go-tgbot/handle"
 	"go-tgbot/ticker"
 	"log"
+	"os"
+	"runtime"
 	"time"
 )
 
 //go:embed config/prod.yaml
 var embedWebFiles embed.FS
 
+var (
+	gitCommit string
+	buildAt   string
+)
+
 func main() {
 	extra.RegisterFuzzyDecoders()
+
 	flag.Parse()
+	if len(os.Args) >= 2 && os.Args[1] == "version" {
+		print(fmt.Sprintf(`Git commit:   %s
+								 Go version:   %s
+								 Built:        %s
+                                 OS/Arch:      %s/%s`,
+			gitCommit, runtime.Version(), buildAt, runtime.GOOS, runtime.GOARCH))
+		return
+	}
+
 	time.LoadLocation("Asia/Shanghai")
 
 	var (
