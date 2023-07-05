@@ -10,10 +10,13 @@ RUN  go env -w GO111MODULE=auto && \
 RUN cd ${GOPATH}/src/tgbot && \
     GIT_COMMIT=$(git rev-parse --short HEAD) && \
     DATE=$(date) && \
-    go build -ldflags="-X 'main.gitCommit=11111' -X 'main.buildAt=2222' -w -extldflags '-static'" -v -o tgbot
-##    upx tgbot
+    go build -ldflags="-X 'main.gitCommit=$GIT_COMMIT' -X 'main.buildAt=$DATE' -w -extldflags '-static'" -v -o tgbot
 
-FROM busybox:stable
-COPY --from=build /go/src/tgbot/tgbot /
+FROM debian:buster-slim
 
-CMD ["/tgbot"]
+RUN apt update && \
+    apt install -y ca-certificates
+
+COPY --from=build /go/src/tgbot/tgbot /usr/bin/
+
+CMD ["/usr/bin/tgbot"]
