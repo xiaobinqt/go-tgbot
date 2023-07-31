@@ -2,17 +2,16 @@ package msg
 
 import (
 	"fmt"
-	"go-tgbot/ecode"
-	"go-tgbot/ticker"
-	"os"
-	"strings"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"go-tgbot/comm/image"
 	"go-tgbot/comm/qweather"
 	"go-tgbot/comm/tian"
+	"go-tgbot/ecode"
+	"go-tgbot/ticker"
+	"os"
+	"strings"
 )
 
 func HandleMsg(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
@@ -109,22 +108,36 @@ func contextTextBypass(txt string, chatID int64) (retMsg string) {
 	// 事件提醒
 	if txt == "事件提醒" {
 		return `
-格式0：+s15:32,消息内容
+格式0：+s15:32//消息内容
 格式0说明：今天 15:32 提醒我「消息内容」
 
-格式1：+s15:32,消息内容,3,60
+格式1：+s15:32//消息内容//3//60
 格式1说明：今天 15:32 提醒我「消息内容」,提醒 3 次每次间隔 60s
 
-格式2: +st20221227 15:35,消息内容
+格式2: +st20221227 15:35//消息内容
 格式2说明：20221227 日 15:35 提醒我「消息内容」。注意此格式的日期和时间中间的空格不能丢
 
-格式3: +st20221227 15:35,消息内容,3,60
+格式3: +st20221227 15:35//消息内容//3//60
 格式3说明：20221227 日 15:35 提醒我「消息内容」,提醒 3 次每次间隔 60s。注意此格式的日期和时间中间的空格不能丢
 `
 	}
 
 	if ticker.IsScheduleNotice(txt) {
 		return ticker.AddScheduleNotice(txt, chatID)
+	}
+
+	// 艾宾浩斯遗忘曲线复习提醒
+	if ok, event := IsLeetCodeMsg(txt); ok {
+		remindMsgs := ReminderMsgAssemble(event)
+		returnMsg := make([]string, 0)
+		for _, each := range remindMsgs {
+			x := ticker.AddScheduleNotice(each, chatID)
+			if x != "" {
+				returnMsg = append(returnMsg, x)
+			}
+		}
+
+		return strings.Join(returnMsg, "\n")
 	}
 
 	// todo 其他的一些

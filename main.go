@@ -34,10 +34,7 @@ func main() {
 
 	flag.Parse()
 	if len(os.Args) >= 2 && os.Args[1] == "version" {
-		print(fmt.Sprintf(`Git commit:   %s
-								 Go version:   %s
-								 Built:        %s
-                                 OS/Arch:      %s/%s`,
+		print(fmt.Sprintf("Git commit:	%s\nGo version:   %s\nBuilt:	%s\nOS/Arch:	%s/%s",
 			gitCommit, runtime.Version(), buildAt, runtime.GOOS, runtime.GOARCH))
 		return
 	}
