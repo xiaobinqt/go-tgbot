@@ -188,6 +188,7 @@ func get(timestamp int64) (msg []string, err error) {
 		Max: fmt.Sprintf("(%d", timestamp),
 	})
 	if zRangeByScore.Err() != nil {
+		err = zRangeByScore.Err()
 		err = errors.Wrapf(err, "get ZRangeByScore err")
 		logrus.Error(err.Error())
 		return nil, err
