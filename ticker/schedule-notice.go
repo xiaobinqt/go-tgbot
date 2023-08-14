@@ -30,7 +30,7 @@ var (
 const (
 	messageType1 = "+s"
 	messageType2 = "+st"
-	memberKey    = "wb-test"
+	memberKey    = "tgbot:schedule.notice"
 )
 
 func IsScheduleNotice(message string) bool {
