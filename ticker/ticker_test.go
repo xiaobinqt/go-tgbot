@@ -104,12 +104,17 @@ func TestZSetRedis(t *testing.T) {
 func TestZGetRedis(t *testing.T) {
 	initAction(t)
 	msg, err := get(time.Now().AddDate(0, 0, 15).Unix())
-	fmt.Println(msg, err)
+	if err != nil {
+		fmt.Println("获取错误...", err.Error())
+		return
+	}
+
+	fmt.Println(msg)
 }
 
 func TestZDelRedis(t *testing.T) {
 	initAction(t)
-	del()
+	del(time.Now().Unix())
 }
 
 func Test_ELM(t *testing.T) {

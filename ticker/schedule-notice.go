@@ -30,7 +30,7 @@ var (
 const (
 	messageType1 = "+s"
 	messageType2 = "+st"
-	memberKey    = "tgbot:schedule.notice"
+	memberKey    = "wb-test"
 )
 
 func IsScheduleNotice(message string) bool {
@@ -197,7 +197,7 @@ func get(timestamp int64) (msg []string, err error) {
 	return zRangeByScore.Val(), nil
 }
 
-func del() {
+func del(unixTime int64) {
 	var (
 		err error
 	)
@@ -209,8 +209,9 @@ func del() {
 	}
 
 	zRemRangeByScore := redisClient.ZRemRangeByScore(ctx, memberKey,
-		"0", fmt.Sprintf("(%d", time.Now().Unix()))
+		"0", fmt.Sprintf("(%d", unixTime))
 	if zRemRangeByScore.Err() != nil {
+		err = zRemRangeByScore.Err()
 		err = errors.Wrapf(err, "schedule notice del err")
 		logrus.Error(err.Error())
 	}
@@ -239,7 +240,10 @@ func ScheduleNoticeTicker(bot *tgbotapi.BotAPI) {
 			if doing {
 				continue
 			}
-			msg, err = get(t.Unix())
+
+			unixTime := t.Unix()
+
+			msg, err = get(unixTime)
 			if err != nil {
 				doing = false
 				continue
@@ -268,7 +272,7 @@ func ScheduleNoticeTicker(bot *tgbotapi.BotAPI) {
 			}
 
 			// 先删除再发消息，发送时有网络请求会慢
-			del()
+			del(unixTime)
 			go sendNotice(msgf, bot)
 
 			doing = false
@@ -282,8 +286,13 @@ func sendNotice(msgf []Msg, bot *tgbotapi.BotAPI) {
 		idMap = make(map[int64]string, 0) // chatID -> message
 	)
 
+	// 如果有相同的 chatID 以换行符追加 message
 	for _, each := range msgf {
-		idMap[each.ChatID] = each.Message
+		if existMessage, ok := idMap[each.ChatID]; ok {
+			idMap[each.ChatID] = fmt.Sprintf("%s\n\n%s", existMessage, each.Message)
+		} else {
+			idMap[each.ChatID] = each.Message
+		}
 	}
 
 	if len(idMap) > 0 {
