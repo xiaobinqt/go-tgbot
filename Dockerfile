@@ -8,9 +8,10 @@ RUN  go env -w GO111MODULE=auto && \
      go env -w GOPROXY=https://goproxy.cn,direct
 
 RUN cd ${GOPATH}/src/tgbot && \
-    GIT_COMMIT=$(git rev-parse --short HEAD) && \
+#    GIT_COMMIT=$(git rev-parse --short HEAD) && \
     DATE=$(date) && \
-    go build -ldflags="-X 'main.gitCommit=$GIT_COMMIT' -X 'main.buildAt=$DATE' -w -extldflags '-static'" -v -o tgbot
+#    go build -ldflags="-X 'main.gitCommit=$GIT_COMMIT' -X 'main.buildAt=$DATE' -w -extldflags '-static'" -v -o tgbot
+    go build -ldflags="-X 'main.buildAt=$DATE' -w -extldflags '-static'" -v -o tgbot
 
 FROM debian:buster-slim
 

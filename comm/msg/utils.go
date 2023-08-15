@@ -49,13 +49,13 @@ func ReminderMsgAssemble(txt string) (msgs []string) {
 	// 设置提醒格式,分别隔 1 天、2 天、4 天、7 天、15 天、1 个月、3 个月、6 个月
 	//carbon.Parse(fmt.Sprintf("%s 10:00", carbon.Now().ToDateString())).AddDays(1)
 	msgs = append(msgs,
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddDays(1).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddDays(2).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddDays(4).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddDays(7).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddMonths(1).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddMonths(3).Format("Ymd"))),
-		format(fmt.Sprintf("+st%s 10:30", carbon.Now().AddMonths(6).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddDays(1).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddDays(2).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddDays(4).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddDays(7).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddMonths(1).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddMonths(3).Format("Ymd"))),
+		format(fmt.Sprintf("+st%s 09:30", carbon.Now().AddMonths(6).Format("Ymd"))),
 	)
 
 	return msgs

@@ -25,8 +25,8 @@ var embedConfigFiles embed.FS
 var embedStaticsFiles embed.FS
 
 var (
-	gitCommit string
-	buildAt   string
+	//gitCommit string
+	buildAt string
 )
 
 func main() {
@@ -34,8 +34,8 @@ func main() {
 
 	flag.Parse()
 	if len(os.Args) >= 2 && os.Args[1] == "version" {
-		print(fmt.Sprintf("Git commit:	%s\nGo version:   %s\nBuilt:	%s\nOS/Arch:	%s/%s",
-			gitCommit, runtime.Version(), buildAt, runtime.GOOS, runtime.GOARCH))
+		print(fmt.Sprintf("Go version:   %s\nBuilt:	%s\nOS/Arch:	%s/%s",
+			runtime.Version(), buildAt, runtime.GOOS, runtime.GOARCH))
 		return
 	}
 
